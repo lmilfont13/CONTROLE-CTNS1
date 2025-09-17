@@ -46,11 +46,86 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
+
+        /* Estilos para impressão - CORRIGIDOS */
+        @media print {
+            * { 
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            body { 
+                background: white !important; 
+                color: black !important;
+                font-size: 11px !important;
+                line-height: 1.3 !important;
+                margin: 0 !important;
+                padding: 15px !important;
+            }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .bg-slate-800, .bg-slate-700, .bg-blue-900, .backdrop-blur-sm { 
+                background: white !important; 
+                border: 1px solid #333 !important;
+                backdrop-filter: none !important;
+            }
+            .text-white, .text-blue-400, .text-green-400, .text-red-400, .text-purple-400, .text-slate-300, .text-slate-400 { 
+                color: black !important; 
+            }
+            .ship-animation, .wave { animation: none !important; }
+            table { 
+                page-break-inside: avoid !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin: 20px 0 !important;
+            }
+            th, td {
+                border: 1px solid #333 !important;
+                padding: 8px !important;
+                text-align: left !important;
+            }
+            th {
+                background-color: #f0f0f0 !important;
+                font-weight: bold !important;
+            }
+            .page-break { page-break-before: always !important; }
+            .print-summary {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 15px !important;
+                margin: 20px 0 !important;
+            }
+            .print-summary-item {
+                border: 2px solid #333 !important;
+                padding: 15px !important;
+                text-align: center !important;
+                background: #f8f8f8 !important;
+            }
+            .print-summary-number {
+                font-size: 24px !important;
+                font-weight: bold !important;
+                margin: 5px 0 !important;
+            }
+            .print-header {
+                text-align: center !important;
+                border-bottom: 2px solid #333 !important;
+                padding-bottom: 20px !important;
+                margin-bottom: 30px !important;
+            }
+            .print-footer {
+                margin-top: 40px !important;
+                padding-top: 20px !important;
+                border-top: 1px solid #333 !important;
+            }
+        }
+        
+        .print-only { display: none; }
+        .print-summary { display: none; }
+        .print-summary-item { display: none; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen text-white">
     <!-- Header -->
-    <header class="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 p-6">
+    <header class="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 p-6 no-print">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold text-white">Controle de Containers</h1>
@@ -63,6 +138,13 @@
         </div>
     </header>
 
+    <!-- Cabeçalho para Impressão -->
+    <div class="print-only print-header">
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">RELATÓRIO DE CONTAINERS</h1>
+        <h2 style="font-size: 18px; margin-bottom: 5px;">Importação China - Controle de Embarques</h2>
+        <p style="font-size: 12px;">Gerado em: <span id="printDate"></span></p>
+    </div>
+
     <div class="max-w-7xl mx-auto p-6 space-y-6">
         <!-- Resumo Geral -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -72,7 +154,7 @@
                         <p class="text-slate-400 text-sm">Embarcados</p>
                         <p class="text-3xl font-bold text-blue-400" id="transitCount">0</p>
                     </div>
-                    <div class="text-blue-400">🚢</div>
+                    <div class="text-blue-400 no-print">🚢</div>
                 </div>
             </div>
             
@@ -82,7 +164,7 @@
                         <p class="text-slate-400 text-sm">Chegando Hoje</p>
                         <p class="text-3xl font-bold text-green-400" id="todayCount">0</p>
                     </div>
-                    <div class="text-green-400">📦</div>
+                    <div class="text-green-400 no-print">📦</div>
                 </div>
             </div>
             
@@ -92,7 +174,7 @@
                         <p class="text-slate-400 text-sm">Atrasados</p>
                         <p class="text-3xl font-bold text-red-400" id="delayedCount">0</p>
                     </div>
-                    <div class="text-red-400">⚠️</div>
+                    <div class="text-red-400 no-print">⚠️</div>
                 </div>
             </div>
             
@@ -102,13 +184,39 @@
                         <p class="text-slate-400 text-sm">Total Containers</p>
                         <p class="text-3xl font-bold text-purple-400" id="totalCount">0</p>
                     </div>
-                    <div class="text-purple-400">📊</div>
+                    <div class="text-purple-400 no-print">📊</div>
                 </div>
             </div>
         </div>
 
-        <!-- Botão Adicionar Container -->
-        <div class="flex justify-end">
+        <!-- Resumo para Impressão -->
+        <div class="print-only" style="margin-top: 20px;">
+            <h3 style="font-size:16px; font-weight:bold; margin:0 0 12px 0;">RESUMO EXECUTIVO</h3>
+            <div class="print-summary" style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;">
+                <div class="print-summary-item" style="border:2px solid #333; padding:12px; text-align:center; background:#f8f8f8;">
+                    <div style="font-size: 12px; margin-bottom: 5px;">Embarcados</div>
+                    <div class="print-summary-number" id="printTransitCount" style="font-size:24px; font-weight:bold;">0</div>
+                </div>
+                <div class="print-summary-item" style="border:2px solid #333; padding:12px; text-align:center; background:#f8f8f8;">
+                    <div style="font-size: 12px; margin-bottom: 5px;">Chegando Hoje</div>
+                    <div class="print-summary-number" id="printTodayCount" style="font-size:24px; font-weight:bold;">0</div>
+                </div>
+                <div class="print-summary-item" style="border:2px solid #333; padding:12px; text-align:center; background:#f8f8f8;">
+                    <div style="font-size: 12px; margin-bottom: 5px;">Atrasados</div>
+                    <div class="print-summary-number" id="printDelayedCount" style="font-size:24px; font-weight:bold;">0</div>
+                </div>
+                <div class="print-summary-item" style="border:2px solid #333; padding:12px; text-align:center; background:#f8f8f8;">
+                    <div style="font-size: 12px; margin-bottom: 5px;">Total de Containers</div>
+                    <div class="print-summary-number" id="printTotalCount" style="font-size:24px; font-weight:bold;">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex justify-end gap-4 no-print">
+            <button onclick="printReport()" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                <span>🖨️</span> Imprimir Resumo
+            </button>
             <button onclick="showAddModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
                 <span>➕</span> Adicionar Container
             </button>
@@ -123,10 +231,49 @@
                 <!-- Containers serão inseridos aqui -->
             </div>
         </div>
+
+        <!-- Tabela para Impressão -->
+        <div class="print-only">
+            <h3 style="font-size: 16px; font-weight: bold; margin: 30px 0 15px 0;">DETALHAMENTO DOS CONTAINERS</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Container</th>
+                        <th>Produtos</th>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Saída</th>
+                        <th>Chegada</th>
+                        <th>Status</th>
+                        <th>Carga</th>
+                        <th>Qtd</th>
+                    </tr>
+                </thead>
+                <tbody id="printTableBody">
+                    <!-- Dados serão inseridos aqui -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé para Impressão -->
+        <div class="print-only print-footer">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <p><strong>Responsável:</strong> _________________________</p>
+                    <br>
+                    <p><strong>Data:</strong> _________________________</p>
+                </div>
+                <div>
+                    <p><strong>Visto:</strong> _________________________</p>
+                    <br>
+                    <p><strong>Assinatura:</strong> _________________________</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal Adicionar Container -->
-    <div id="addModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div id="addModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 no-print">
         <div class="bg-slate-800 rounded-xl p-8 max-w-md w-full mx-4 border border-slate-700">
             <h3 class="text-xl font-semibold mb-6">Adicionar Novo Container</h3>
             
@@ -410,7 +557,7 @@
                                 </div>
                             </div>
                             
-                            <div class="lg:w-80">
+                            <div class="lg:w-80 no-print">
                                 <div class="mb-2 flex justify-between text-sm">
                                     <span class="text-slate-400">
                                         ${container.status === 'Em Produção' ? 'Aguardando Embarque' : 'Progresso da Viagem'}
@@ -433,7 +580,7 @@
                                 }
                             </div>
                             
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 no-print">
                                 <button onclick="editContainer(${container.id})" class="px-4 py-2 bg-slate-600 hover:bg-slate-700 rounded-lg text-sm transition-colors">
                                     ✏️ Editar
                                 </button>
@@ -448,31 +595,126 @@
         }
 
         function updateSummary() {
-            let embarcadoCount = 0;
-            let producaoCount = 0;
-            let todayCount = 0;
-            let delayedCount = 0;
-            
+            console.log('Atualizando resumo com quantidades reais...');
+
+            let embarcadoCount = 0;   // soma de containers em trânsito
+            let todayCount = 0;       // soma chegando hoje
+            let delayedCount = 0;     // soma atrasados
+            let totalCount = 0;       // soma total de containers (todas as linhas)
+
             containers.forEach(container => {
-                const daysRemaining = calculateDaysRemaining(container.arrivalDate);
-                
-                if (container.status === 'Em Produção') {
-                    producaoCount++;
-                } else if (container.status === 'Embarcado') {
+                const qty = Math.max(1, parseInt(container.containerCount || 1));
+                totalCount += qty;
+
+                if (container.status === 'Embarcado') {
+                    const daysRemaining = calculateDaysRemaining(container.arrivalDate);
                     if (daysRemaining < 0) {
-                        delayedCount++;
+                        delayedCount += qty;
                     } else if (daysRemaining === 0) {
-                        todayCount++;
+                        todayCount += qty;
                     } else {
-                        embarcadoCount++;
+                        embarcadoCount += qty;
                     }
                 }
             });
+
+            console.log(`Contadores (somando quantidades): Embarcados=${embarcadoCount}, Hoje=${todayCount}, Atrasados=${delayedCount}, Total=${totalCount}`);
+
+            function updateElement(id, value) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                } else {
+                    console.error(`Elemento ${id} não encontrado!`);
+                }
+            }
+
+            // Atualizar cartões na tela
+            updateElement('transitCount', embarcadoCount);
+            updateElement('todayCount', todayCount);
+            updateElement('delayedCount', delayedCount);
+            updateElement('totalCount', totalCount);
+
+            // Atualizar resumo para impressão
+            updateElement('printTransitCount', embarcadoCount);
+            updateElement('printTodayCount', todayCount);
+            updateElement('printDelayedCount', delayedCount);
+            updateElement('printTotalCount', totalCount);
+        }
+
+        function printReport() {
+            console.log('Iniciando impressão do relatório...');
+            console.log('Total de containers para imprimir:', containers.length);
             
-            document.getElementById('transitCount').textContent = embarcadoCount;
-            document.getElementById('todayCount').textContent = todayCount;
-            document.getElementById('delayedCount').textContent = delayedCount;
-            document.getElementById('totalCount').textContent = containers.length;
+            try {
+                // Atualizar resumo primeiro
+                console.log('Atualizando resumo...');
+                updateSummary();
+                
+                // Atualizar data de impressão
+                const now = new Date();
+                const dateString = now.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                console.log('Data de impressão:', dateString);
+                
+                const printDateEl = document.getElementById('printDate');
+                if (printDateEl) {
+                    printDateEl.textContent = dateString;
+                    console.log('Data de impressão definida');
+                } else {
+                    console.error('Elemento printDate não encontrado!');
+                }
+                
+                // Preencher tabela para impressão
+                const tableBody = document.getElementById('printTableBody');
+                if (tableBody) {
+                    console.log('Preenchendo tabela de impressão...');
+                    
+                    if (containers.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhum container encontrado</td></tr>';
+                    } else {
+                        tableBody.innerHTML = containers.map(container => {
+                            const daysRemaining = calculateDaysRemaining(container.arrivalDate);
+                            const statusInfo = getStatusInfo(container, daysRemaining);
+                            
+                            return `
+                                <tr>
+                                    <td>${container.number || 'N/A'}</td>
+                                    <td>${container.productNumbers || 'N/A'}</td>
+                                    <td>${container.origin || 'N/A'}</td>
+                                    <td>${container.destination || 'N/A'}</td>
+                                    <td>${container.departureDate ? new Date(container.departureDate).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                                    <td>${container.arrivalDate ? new Date(container.arrivalDate).toLocaleDateString('pt-BR') : 'N/A'}</td>
+                                    <td>${statusInfo.status || 'N/A'}</td>
+                                    <td>${container.cargo || 'N/A'}</td>
+                                    <td style="text-align: center;">${container.containerCount || 0}</td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                    
+                    console.log('Tabela preenchida com', containers.length, 'containers');
+                } else {
+                    console.error('Elemento printTableBody não encontrado!');
+                }
+                
+                // Aguardar um pouco para garantir que tudo foi atualizado
+                console.log('Aguardando 300ms antes de imprimir...');
+                setTimeout(() => {
+                    console.log('Iniciando impressão...');
+                    window.print();
+                }, 300);
+                
+            } catch (error) {
+                console.error('Erro ao gerar relatório:', error);
+                alert('Erro ao gerar relatório: ' + error.message);
+            }
         }
 
         function showAddModal() {
@@ -557,10 +799,47 @@
         }
 
         function deleteContainer(id) {
+            console.log('Tentando excluir container com ID:', id);
+            console.log('Containers antes da exclusão:', containers.length);
+            
             if (confirm('Tem certeza que deseja excluir este container?')) {
-                containers = containers.filter(c => c.id !== id);
-                renderContainers();
-                updateSummary();
+                try {
+                    // Encontrar o container antes de excluir
+                    const containerToDelete = containers.find(c => c.id === id);
+                    console.log('Container encontrado:', containerToDelete);
+                    
+                    if (!containerToDelete) {
+                        console.error('Container não encontrado!');
+                        alert('Container não encontrado!');
+                        return;
+                    }
+                    
+                    // Filtrar containers removendo o selecionado
+                    const originalLength = containers.length;
+                    containers = containers.filter(c => c.id !== id);
+                    
+                    console.log(`Containers após exclusão: ${containers.length} (removido: ${originalLength - containers.length})`);
+                    
+                    // Verificar se realmente foi removido
+                    if (containers.length === originalLength) {
+                        console.error('Falha ao remover container!');
+                        alert('Falha ao remover container!');
+                        return;
+                    }
+                    
+                    // Atualizar a interface
+                    console.log('Atualizando interface...');
+                    renderContainers();
+                    updateSummary();
+                    
+                    console.log('Container excluído com sucesso!');
+                    
+                } catch (error) {
+                    console.error('Erro ao excluir container:', error);
+                    alert('Erro ao excluir container: ' + error.message);
+                }
+            } else {
+                console.log('Exclusão cancelada pelo usuário');
             }
         }
 
@@ -602,5 +881,5 @@
             updateSummary();
         }, 60000);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b0c9dc735cf620',t:'MTc1NzE5MTMwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980bcc7aa6c44f80',t:'MTc1ODE0NTYxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
